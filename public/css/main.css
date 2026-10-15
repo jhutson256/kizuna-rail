@@ -1,4 +1,4 @@
-@layer base, utilities, components, layout;
+@layer base, layout, components, utilities;
 
 @import 'base/reset.css' layer(base);
 @import 'base/variables.css' layer(base);

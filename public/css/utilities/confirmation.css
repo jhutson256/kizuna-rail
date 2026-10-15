@@ -406,14 +406,19 @@ article.confirmation-page {
 }
 
 @media print {
+    header, footer {
+        display: none;
+    }
+
     article.confirmation-page {
-        .confirmation-actions {
-            display: none;
-        }
 
         .confirmation-header {
             background-color: white;
             border: 2px solid var(--clr-primary);
+        }
+
+        .passengers-info, .next-steps, .important-info, .confirmation-actions {
+            display: none !important;
         }
     }
 }

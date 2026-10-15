@@ -1,5 +1,6 @@
 import { generateConfirmationCode } from '../includes/helpers.js';
 import { getDb as db } from './db-in-file.js';
+import { yenToUsd } from '../includes/helpers.js';
 
 // ROUTE MODEL FUNCTIONS
 
@@ -18,15 +19,28 @@ export const getListOfSeasons = async () => {
 };
 
 export const getRouteById = async (routeId) => {
-    return db().routes.find(route => route.id == routeId) || null;
+    const route = db().routes.find(route => route.id == routeId) || null;
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const formattedMonths = route.operatingMonths ? route.operatingMonths.map(num => months[num - 1]) : [];
+
+    return {
+        ...route,
+        operatingMonths: formattedMonths
+    };
 };
 
-export const getRoutesByRegion = async (region) => {
-    return db().routes.filter(route => route.region.toLowerCase() == region.toLowerCase());
-};
+export const getFilteredRoutes = async (region, season) => {
+    let results = db().routes;
 
-export const getRoutesBySeason = async (season) => {
-    return db().routes.filter(route => route.bestSeason.toLowerCase() == season.toLowerCase());
+    if (region) {
+        results = results.filter(route => route.region.toLowerCase() === region.toLowerCase());
+    }
+
+    if (season) {
+        results = results.filter(route => route.bestSeason.toLowerCase() === season.toLowerCase());
+    }
+
+    return results;
 };
 
 export const getRoutesByMonth = async (month) => {
@@ -169,7 +183,7 @@ export const getTicketOptionsForRoute = async (routeId) => {
     return db().ticketClasses.map(tc => ({
         class: tc.class,
         name: tc.name,
-        price: route.distance * tc.pricePerKm,
+        price: yenToUsd(route.distance * tc.pricePerKm),
         amenities: tc.amenities,
         description: tc.description
     }));

@@ -1,3 +1,19 @@
+#filters {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 2rem;
+
+    .filter-region {
+        justify-self: start;
+    }
+
+    .filter-season {
+        justify-self: end;
+    }
+}
+
 .routes-grid {
     display: flex;
     flex-direction: column;
